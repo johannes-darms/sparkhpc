@@ -18,6 +18,7 @@ import sys
 import pkg_resources 
 import logging
 import signal
+import uuid
 
 
 try: 
@@ -359,10 +360,11 @@ class SparkJob(object):
                                   master_log_filename=self.master_log_filename,
                                   extra_scheduler_options=self.extra_scheduler_options)
 
-        with open('job', 'w') as jobfile: 
+        filename='/tmp/'+uuid.uuid1()
+        with open(filename, 'w') as jobfile: 
             jobfile.write(job)
 
-        self.prop_dict['jobid'] = self._submit_job('job')
+        self.prop_dict['jobid'] = self._submit_job(filename)
         self.prop_dict['status'] = 'submitted'
         self._dump_to_json()
 
